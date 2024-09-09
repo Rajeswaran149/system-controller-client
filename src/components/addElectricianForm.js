@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { base_url } from '../config';
 
 const AddElectricianForm = () => {
   const [name, setName] = useState('');
@@ -7,7 +8,7 @@ const AddElectricianForm = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    await axios.post('http://localhost:5000/api/electricians', { name, contact });
+    await axios.post(`${base_url}/api/electricians`, { name, contact });
     setName('');
     setContact('');
   };

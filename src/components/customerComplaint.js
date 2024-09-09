@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { fetchElectricians } from '../redux/actions';
+import { fetchComplaints } from '../redux/actions';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import axios from 'axios';
 import { base_url } from '../config';
 
-const ElectricianList = () => {
+const CustomerComplaint = () => {
   const dispatch = useDispatch();
   const [editingID, setEditingID] = useState(null);
   const [addMode, setAddMode] = useState({});
   const [modal, setModal] = useState(false);
-  const electricians = useSelector(state => state.electricians);
-  const [editChg, setEditChg] = useState({});
+  const complaints = useSelector(state => state.complaints);
 
   const toggle = () => setModal(!modal);
 
   useEffect(() => {
-    dispatch(fetchElectricians());
+    dispatch(fetchComplaints());
   }, [dispatch]);
+ console.log(complaints)
 
-  function generateRandomId() {
+ function generateRandomId() {
     return Math.floor(10000 + Math.random() * 90000); // Ensures the number is always 5 digits
 }
 
@@ -28,12 +28,12 @@ const ElectricianList = () => {
   const addNewElectrician = async () => {
     try {
       addMode["ID"] = generateRandomId();
-      await axios.post(`${base_url}/api/electricians/add`, addMode);
-      dispatch(fetchElectricians());
+      await axios.post(`${base_url}/api/complaints/add`, addMode);
+      dispatch(fetchComplaints());
       setAddMode({});
       toggle();
     } catch (err) {
-      console.error('Error adding electrician:', err);
+      console.error('Error adding complaint:', err);
     }
   };
 
@@ -42,12 +42,12 @@ const ElectricianList = () => {
     setAddMode({ ...addMode, [field]: value });
   };
 
-  const handleEditClick = (id) => setEditingID(id);
+ 
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${base_url}/api/electricians/${id}`);
-      dispatch(fetchElectricians());
+      await axios.delete(`${base_url}/api/complaints/${id}`);
+      dispatch(fetchComplaints());
     } catch (err) {
       console.error('Error deleting electrician:', err);
     }
@@ -55,27 +55,22 @@ const ElectricianList = () => {
 
   const handleSaveClick = async () => {
     try {
-      const findObj = electricians.find(e => e.ID === editingID);
-      const newObj = { ...findObj, ...editChg };
+      const findObj = complaints.find(e => e.ID === editingID);
+      const newObj = { ...findObj};
       
-      await axios.post(`${base_url}/api/electricians/edit`, newObj);
-      dispatch(fetchElectricians());
+      await axios.post(`${base_url}/api/complaints/edit`, newObj);
+      dispatch(fetchComplaints());
       setEditingID(null);
     } catch (err) {
       console.error('Error saving electrician:', err);
     }
   };
 
-  const handleInputChange = (event, field) => {
-    const { value } = event.target;
-    setEditChg({ ...editChg, [field]: value });
-  };
-
+ 
   const handleCancelClick = () => setEditingID(null);
 
   return (
     <div className="mx-auto p-6 bg-white shadow-md rounded-lg">
-
       <div className="overflow-x-auto">
         <button
           className="text-white hover:text-green-900 mr-2 bg-green-500 px-4 py-1 rounded-sm"
@@ -92,38 +87,48 @@ const ElectricianList = () => {
             <div className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Name
+                  Customer Name
                 </label>
                 <input
-                  id="name"
+                  id="customerName"
                   type="text"
-                  name="Name"
+                  name="customerName"
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  onChange={(e) => handleNewElectrician(e, 'Name')}
+                  onChange={(e) => handleNewElectrician(e, 'customerName')}
                 />
               </div>
               <div>
                 <label htmlFor="contact" className="block text-sm font-medium text-gray-700">
-                  Contact
+                Customer Address
                 </label>
                 <input
-                  id="contact"
+                  id="customerAddress"
                   type="text"
-                  name="Contact"
+                  name="customerAddress"
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  onChange={(e) => handleNewElectrician(e, 'Contact')}
+                  onChange={(e) => handleNewElectrician(e, 'customerAddress')}
                 />
               </div>
               <div>
                 <label htmlFor="occupation" className="block text-sm font-medium text-gray-700">
-                  Occupation
+                    Category
                 </label>
                 <input
-                  id="occupation"
+                  id="category"
                   type="text"
-                  name="Occupation"
+                  name="category"
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  onChange={(e) => handleNewElectrician(e, 'Occupation')}
+                  onChange={(e) => handleNewElectrician(e, 'category')}
+                />
+                <label htmlFor="occupation" className="block text-sm font-medium text-gray-700">
+                  Description
+                </label>
+                <input
+                  id="description"
+                  type="text"
+                  name="description"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  onChange={(e) => handleNewElectrician(e, 'description')}
                 />
               </div>
             </div>
@@ -139,60 +144,32 @@ const ElectricianList = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-solid border-2">ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-solid border-2">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-solid border-2">Contact</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-solid border-2">Occupation</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-solid border-2">Customer Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-solid border-2">Customer Address</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-solid border-2">Category</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-solid border-2">Description</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-solid border-2">Status</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-solid border-2">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {electricians.map((e) => (
+            {complaints.map((e) => (
               <tr key={e.ID} className="hover:bg-gray-100">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-solid border-2">{e.ID}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-solid border-2">
-                  {editingID === e.ID ? (
-                    <input
-                      type="text"
-                      name="Name"
-                      defaultValue={e.Name}
-                      className="border border-gray-300 rounded-md py-1 px-2"
-                      onChange={(e) => handleInputChange(e, 'Name')}
-                    />
-                  ) : (
-                    e.Name
-                  )}
+                   { e.customerName}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-solid border-2">
-                  {editingID === e.ID ? (
-                    <input
-                      type="text"
-                      name="Contact"
-                      defaultValue={e.Contact}
-                      className="border border-gray-300 rounded-md py-1 px-2"
-                      onChange={(e) => handleInputChange(e, 'Contact')}
-                    />
-                  ) : (
-                    e.Contact
-                  )}
+                    {e.customerAddress}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-solid border-2">
-                  {editingID === e.ID ? (
-                    <input
-                      type="text"
-                      name="Occupation"
-                      defaultValue={e.Occupation}
-                      className="border border-gray-300 rounded-md py-1 px-2"
-                      onChange={(e) => handleInputChange(e, 'Occupation')}
-                    />
-                  ) : (
-                    e.Occupation
-                  )}
+                   { e.category}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-solid border-2">
-                 
-                   { e.status}
-
+                    {e.description}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-solid border-2">
+                    {e.status}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   {editingID === e.ID ? (
@@ -212,12 +189,7 @@ const ElectricianList = () => {
                     </>
                   ) : (
                     <>
-                      <button
-                        className="text-white hover:text-blue-900 mr-2 bg-blue-500 px-4 py-1 rounded-sm"
-                        onClick={() => handleEditClick(e.ID)}
-                      >
-                        Edit
-                      </button>
+                     
                       <button
                         className="text-white hover:text-red-900 mr-2 bg-red-500 px-4 py-1 rounded-sm"
                         onClick={() => handleDelete(e.ID)}
@@ -236,4 +208,4 @@ const ElectricianList = () => {
   );
 };
 
-export default ElectricianList;
+export default CustomerComplaint;

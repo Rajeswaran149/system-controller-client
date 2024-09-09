@@ -6,7 +6,7 @@ import axios from 'axios';
      dispatch({ type: 'FETCH_ELECTRICIANS', payload: response.data });
    };
 
-  //  export const fetchComplaints = () => async dispatch => {
-  //    const response = await axios.get('http://localhost:5000/api/complaints');
-  //    dispatch({ type: 'FETCH_COMPLAINTS', payload: response.data });
-  //  };
+   export const fetchComplaints = () => async dispatch => {
+     const response = await axios.get('http://localhost:5000/api/complaints');
+     dispatch({ type: 'FETCH_COMPLAINTS', payload: response.data });
+   };
