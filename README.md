@@ -1,3 +1,32 @@
+#Clone the repository:
+git clone <repository_url>
+
+#Install the dependencies:
+npm install
+
+#Start server:
+npm start
+
+#Electrician list
+![electrician lists](https://github.com/user-attachments/assets/ca7b73ae-454e-4090-8e00-702dce93c3d7)
+
+
+#Add new electrician
+![add new electrician](https://github.com/user-attachments/assets/c63e3361-1e33-4673-a363-4c36bb3a7e7c)
+
+
+#edit electrician
+![edit electrician list](https://github.com/user-attachments/assets/e0223f24-0314-4c41-abf0-8297fb7e8957)
+
+
+#complaint list
+![complaints list](https://github.com/user-attachments/assets/701fd72e-6fd7-4f7c-a76a-45ddb0b617f1)
+
+#add new complaint
+![add new complaint](https://github.com/user-attachments/assets/3d229898-1b6d-482a-abdb-580bc9843833)
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
